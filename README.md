@@ -1,0 +1,1 @@
+# skupper-example-camel-integration
