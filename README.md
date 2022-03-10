@@ -1,6 +1,6 @@
 # Skupper Camel Integration Example
 
-#### Twitter, Telegram and PosgreSQL integration routes deployed across Kubernetes clusters using Skupper
+#### Twitter, Telegram and PostgreSQL integration routes deployed across Kubernetes clusters using Skupper
 
 This example is part of a [suite of examples][examples] showing the
 different ways you can use [Skupper][website] to connect services
@@ -43,9 +43,9 @@ to use its credentials.
 
 It contains the following components:
 
-* A Twitter Camel integration that searches in the Twitter feed for results containing the word "skupper" (public).
+* A Twitter Camel integration that searches in the Twitter feed for results containing the word `skupper` (public).
 
-* A PosgresSQL Camel sink that receives the data from the Twitter Camel router and sends it to the database (public).
+* A PostgreSQL Camel sink that receives the data from the Twitter Camel router and sends it to the database (public).
 
 * A PostgreSQL database that contains the results (private).
 
@@ -66,7 +66,7 @@ choose
 
 * A `Twitter Developer Account` in order to use the Twiter API
 
-* Create a `Telegram` Bot and Channel to publish messages in a channel of preference
+* Create a `Telegram` Bot and Channel to publish messages
 
 ## Step 1: Configure separate console sessions
 
@@ -366,8 +366,6 @@ The database is located in `private1`, but the TelegramRoute integration
 in `public2` can "see" it as if it were local.  When the integration pulls
 the database, Skupper forwards the request to the namespace where the database is running
 and routes the response back to the integration component.
-
-<img src="images/sequence.svg" width="640"/>
 
 ## Cleaning up
 
