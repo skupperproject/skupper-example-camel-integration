@@ -62,11 +62,16 @@ guide][install-skupper])
 * Access to at least one Kubernetes cluster, from any provider you
 choose
 
-* `Kamel` installation to deploy the Camel integrations
+* `Kamel` installation to deploy the Camel integrations per namespace.
+In minikube you will need to execute the following commands:
+```
+minikube addons enable registry
+kamel install
+```
 
-* A `Twitter Developer Account` in order to use the Twiter API
+* A `Twitter Developer Account` in order to use the Twiter API (you need to add the credentials in `config.properties` file)
 
-* Create a `Telegram` Bot and Channel to publish messages
+* Create a `Telegram` Bot and Channel to publish messages (you need to add the credentials in `config.properties` file)
 
 ## Step 1: Configure separate console sessions
 
@@ -284,14 +289,6 @@ every 5000 ms for tweets that include the word `skupper`. Subsequently, it will 
 `postgresql-sink`, that should be installed in the same cluster as well.
 The kamelet sink will insert the results in the postgreSQL database.
 
-You will need to modify the following properties in the script `src/main/resources/scripts/setUpPublic1Cluster.sh` with your own credentials.
-```
-CONSUMER_KEY=your_consumer_key
-CONSUMER_SECRET=your_consumer_secret
-ACCESS_TOKEN=your_access_token
-ACCESS_TOKEN_SECRET=your_access_token_secret
-```
-
 Console for _public1_:
 
 ~~~ shell
@@ -304,12 +301,6 @@ In this step we will install the secret in Kubernetes that contains the database
 by the `TelegramRoute` component.
 After that we will deploy `TelegramRoute` using kamel in the Kubernetes cluster. This component will poll the
 database every 3 seconds and gather the results inserted during the last 3 seconds.
-
-You will need to modify the following properties in the script `src/main/resources/scripts/setUpPublic2Cluster.sh` with your own credentials.
-```
-AUTHORIZATION_TOKEN=your_authorization_token
-CHAT_ID=your_chat_id
-```
 
 Console for _public2_:
 
@@ -353,8 +344,8 @@ Sample output:
 ## Summary
 
 This example locates the different camel integrations in different
-namespaces, on different clusters.  Ordinarily, this means that they
-have no way to communicate with the database deployed in the privet cluster
+namespaces, on different clusters. This means that they
+have no way to communicate with the database deployed in the private cluster
 unless they are exposed to the public internet.
 
 Introducing Skupper into each namespace allows us to create a virtual
@@ -375,25 +366,19 @@ following commands.
 Console for _private1_:
 
 ~~~ shell
-skupper delete
-kubectl delete deployment/postgres
+src/main/resources/scripts/tearDownPrivate1Cluster.sh
 ~~~
 
 Console for _public1_:
 
 ~~~ shell
-skupper delete
-kamel delete twitter-route
-kubectl delete -f src/main/resources/postgres-sink.kamelet.yaml
-kamel uninstall
+src/main/resources/scripts/tearDownPublic1Cluster.sh
 ~~~
 
 Console for _public2_:
 
 ~~~ shell
-skupper delete
-kubectl delete secret tw-datasource
-kamel uninstall
+src/main/resources/scripts/tearDownPublic2Cluster.sh
 ~~~
 
 ## Next steps
